@@ -2,6 +2,8 @@
 #include <lodepng.h>
 
 
+const void SetPxl(int x, int y, int r, int g, int b, int a, int width, std::vector<uint8_t>& imageBuffer);
+
 int main()
 {
 	std::string outputFilename = "output.png";
@@ -13,17 +15,17 @@ int main()
 	// This std::vector has one 8-bit value for each pixel in each row and column of the image, and
 	// for each of the 4 channels (red, green, blue and alpha).
 	// Remember 8-bit unsigned values can range from 0 to 255.
-	std::vector<uint8_t> imageBuffer(height*width*nChannels);
+	std::vector<uint8_t> imageBuffer(height * width * nChannels);
 
-	// This for loop sets all the pixels of the image to a cyan colour. 
-	for(int y = 0; y < height; ++y) 
+	// This for loop sets all the pixels of the image to a red colour. 
+	for (int y = 0; y < height; ++y)
 		for (int x = 0; x < width; ++x) {
 			int pixelIdx = x + y * width;
-			imageBuffer[pixelIdx * nChannels + 0] = 0; // Set red pixel values to 0
-			imageBuffer[pixelIdx * nChannels + 1] = 255; // Set green pixel values to 255 (full brightness)
-			imageBuffer[pixelIdx * nChannels + 2] = 255; // Set blue pixel values to 255 (full brightness)
-			imageBuffer[pixelIdx * nChannels + 3] = 255; // Set alpha (transparency) pixel values to 255 (fully opaque)
+			SetPxl(x, y, 255, 0, 255, 255, width, imageBuffer);
 		}
+	//for () {
+
+		//}
 
 	/// *** Lab Tasks ***
 	// * Task 1: Try adapting the code above to set the lower half of the image to be a green colour.
@@ -60,4 +62,13 @@ int main()
 	}
 
 	return 0;
+}
+
+const void SetPxl(int x, int y, int r, int g, int b, int a, int width, std::vector<uint8_t>& imageBuffer)
+{
+
+	imageBuffer[(x + y * width) * 4 + 0] = r; // Set red pixel values to 0
+	imageBuffer[(x + y * width) * 4 + 1] = g; // Set green pixel values to 255 (full brightness)
+	imageBuffer[(x + y * width) * 4 + 2] = b; // Set blue pixel values to 0 (full brightness)
+	imageBuffer[(x + y * width) * 4 + 3] = a;// Set alpha (transparency) pixel values to 255 (fully opaque)
 }
