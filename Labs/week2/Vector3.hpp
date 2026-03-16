@@ -14,9 +14,11 @@ public:
 	// This is the default constructor.
 	// Change this to set the x, y and z components of the vector to all be zero.
 	// You can use an initialiser list, or set them in the constructor function's body.
-	Vector3()
+	Vector3(float x, float y, float z)
 	{
-		// YOUR CODE HERE
+		x = 0.0f;
+		y = 0.0f;
+		z = 0.0f;
 	}
 
 	// This constructor can be used to set the x, y and z components of a vector when it
