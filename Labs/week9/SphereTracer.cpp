@@ -1,7 +1,7 @@
 // This define is necessary to get the M_PI constant.
 #define _USE_MATH_DEFINES
 #include <math.h>
-
+#include <algorithm>
 #include <iostream>
 #include <lodepng.h>
 #include "Image.hpp"
@@ -79,15 +79,33 @@ bool raySphereIntersection(const Ray& ray, const Sphere& sphere, Vector3f& inter
 
 	// Steps:
 	// 1. Find the value of A, B and C from the lecture slides.
+	Vector3f v = ray.origin - sphere.centre;
+	int a = 1;
+	float b = (2 * v).dot(ray.direction.normalized());
+	float c = pow(v.norm(), 2) - pow(sphere.radius, 2);
 	// 2. Find the value of the discriminant B^2 - 4AC
+	int discriminant = pow(b, 2) - (4 * a * c);
 	// 3. If the discriminant is less than 0, return false (no solutions).
+	if (discriminant > 0) {
+		return false;
+	}
 	// 4. Otherwise, find the two solutions for t (t1 and t2, for example).
+	float t1 = -b + sqrt(discriminant) / 2 * a;
+	float t2 = -b - sqrt(discriminant) / 2 * a;
 	// 5. Find the smallest solution for t that's bigger than minT.
-	//   a. If such a t exists, set the value of "intersection" and "t" and return true.
-	//   b. If no such t exists, return false.
-
-	// Remove this existing code, that just always returns false.
-	return false;
+	if (t1 > minT) {
+		t = t1;
+		intersection = ray.origin + t2 * ray.direction.normalized();
+		return true;
+	}
+	else if (t2 > minT) {
+		t = t2;
+		intersection = ray.origin + t * ray.direction.normalized();
+		return true;
+	}
+	else {
+		return false;
+	}
 	// *** END YOUR CODE ***
 } 
 
@@ -95,12 +113,13 @@ Vector3f getSphereNormal(const Sphere& sphere, const Vector3f& location) {
 	// Task 2: Find the sphere normal
 	// *** YOUR CODE HERE ***
 	// Find the value of the normal to the sphere at the given location.
+	Vector3f x = location;
+	Vector3f c = sphere.centre;
+	Vector3f normal = (x - c).normalized();
+
+	return normal;
 	// This should only need one line of code!
 	// See the slides for more detail.
-	// 
-	// Remove this existing code that just returns 0.
-	return Vector3f::Zero();
-	// *** END YOUR CODE ***
 }
 
 bool refract(const Vector3f& incident, const Vector3f& norm, float eta, Vector3f& refracted)
@@ -113,6 +132,10 @@ bool refract(const Vector3f& incident, const Vector3f& norm, float eta, Vector3f
 
 	// Steps:
 	// 1. Find the value of the "k" from the lecture slides.
+	Vector3f n = norm;
+	Vector3f i = incident;
+	float eta = eta;
+	Vector3f r = refracted;
 	// 2. If k < 0, return false (TIR occurs).
 	// 3. Otherwise, find the refracted ray and return true.
 
